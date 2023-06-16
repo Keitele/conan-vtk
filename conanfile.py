@@ -8,8 +8,9 @@ from pathlib import Path
 
 class vtkRecipe(ConanFile):  # noqa: D101
     name = "vtk"
-    user = "gtel"
-    channel = "stable"
+    version = "9.2.6"
+    # user = "gtel"
+    # channel = "stable"
 
     # Optional metadata
     license = "BSD license"
@@ -24,11 +25,11 @@ class vtkRecipe(ConanFile):  # noqa: D101
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "fPIC": [True, False],
                "wrap_python": [True, False]}
-    default_options = {"shared": False, "fPIC": True, "wrap_python": False}
+    default_options = {"shared": True, "fPIC": True, "wrap_python": False}
 
     # Sources are located in the same place as this recipe, copy them
     # to the recipe
-    exports_sources = "CMakeLists.txt", "src/*", "include/*"
+    exports_sources = "CMakeLists.txt", "src/*", "include/*", "patches/*"
 
     def source(self):  # noqa: D102
         get(self, self.conan_data['sources'][self.version], strip_root=True)
@@ -91,6 +92,7 @@ class vtkRecipe(ConanFile):  # noqa: D101
         # Tell Conan CMakeDeps generator in the consumers to NOT
         # generate the config files for VTK
         self.cpp_info.set_property("cmake_find_mode", "none")
+        self.cpp_info.set_property("cmake_file_name", "VTK")
         # This will add the folder where VTK installed its cmake
         # config files to the CMAKE_PREFIX_PATH variable in the
         # consumer.
